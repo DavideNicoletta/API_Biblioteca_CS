@@ -1,11 +1,13 @@
 using BibliotecaApi.Dtos;
 using BibliotecaApi.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BibliotecaApi.Controllers;
 
 [ApiController]
 [Route("api/user")]
+[Authorize(Roles = "ROLE_ADMIN")]
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -16,6 +18,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<ActionResult<ResponseApi<UserResponseDto>>> Create(UserRequestDto request)
     {
         var created = await _userService.CreateAsync(request);

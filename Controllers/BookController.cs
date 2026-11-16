@@ -1,7 +1,7 @@
 using BibliotecaApi.Dtos;
 using BibliotecaApi.Services;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace BibliotecaApi.Controllers;
 
@@ -48,8 +48,9 @@ public class BookController : ControllerBase
         return Ok(ResponseApi<BookResponseDto>.Success(book));
     }
 
-
+    
     [HttpPost]
+    [Authorize(Roles = "ROLE_ADMIN")]
     public async Task<ActionResult<ResponseApi<BookResponseDto>>> Create(BookRequestDto request)
     {
         var created = await _bookService.CreateAsync(request);
@@ -63,6 +64,7 @@ public class BookController : ControllerBase
 
 
     [HttpPut("{uuid}")]
+    [Authorize(Roles = "ROLE_ADMIN")]
     public async Task<ActionResult<ResponseApi<BookResponseDto>>> Update(string uuid, BookRequestDto request)
     {
         var (result, book) = await _bookService.UpdateAsync(uuid, request);
@@ -82,6 +84,7 @@ public class BookController : ControllerBase
 
 
     [HttpDelete("{uuid}")]
+    [Authorize(Roles = "ROLE_ADMIN")]
     public async Task<IActionResult> Delete(string uuid)
     {
         bool delete = await _bookService.DeleteAsync(uuid);
